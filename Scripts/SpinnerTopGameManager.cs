@@ -16,7 +16,7 @@ public class SpinnerTopGameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         uI_InformPanelGameObject.SetActive(true);
-        uI_InformText.text = "Search for Games to Battle";
+        //uI_InformText.text = "Search for Games to Battle";
     }
 
     // Update is called once per frame
