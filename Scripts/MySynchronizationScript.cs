@@ -17,6 +17,8 @@ public class MySynchronizationScript : MonoBehaviour, IPunObservable
     public float teleportIfDistanceGreaterThan = 1.0f;
     private float distance;
     private float angle;
+
+    private GameObject battleArenaGameObject;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -25,6 +27,7 @@ public class MySynchronizationScript : MonoBehaviour, IPunObservable
 
         networkedPosition = new Vector3();
         networkedRotation = new Quaternion();
+        battleArenaGameObject = GameObject.Find("BattleArena");
     }
     // Start is called before the first frame update
     void Start()
@@ -55,7 +58,7 @@ public class MySynchronizationScript : MonoBehaviour, IPunObservable
         {
             //photon view belongs to this user
             //send my position 
-            stream.SendNext(rb.position);
+            stream.SendNext(rb.position-battleArenaGameObject.transform.position);
             stream.SendNext(rb.rotation);
 
             if(synchronizeVelocity == true)
@@ -70,7 +73,7 @@ public class MySynchronizationScript : MonoBehaviour, IPunObservable
         }
         else
         {
-            networkedPosition = (Vector3)stream.ReceiveNext();
+            networkedPosition = (Vector3)stream.ReceiveNext()+ battleArenaGameObject.transform.position;
             networkedRotation = (Quaternion)stream.ReceiveNext();
 
             if(isTeleportEnabled)
