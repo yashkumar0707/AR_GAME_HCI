@@ -59,6 +59,23 @@ public class BattleScript : MonoBehaviourPun
     {
         if(collision.gameObject.CompareTag("Player"))
         {
+            if (photonView.IsMine)
+            {
+                Vector3 effectPosition = (gameObject.transform.position + collision.transform.position) / 2 + new Vector3(0, 0.05f, 0);
+
+                //Instantiate Collision Effect ParticleSystem
+                GameObject collisionEffectGameobject = GetPooledObject();
+                if (collisionEffectGameobject != null)
+                {
+                    collisionEffectGameobject.transform.position = effectPosition;
+                    collisionEffectGameobject.SetActive(true);
+                    collisionEffectGameobject.GetComponentInChildren<ParticleSystem>().Play();
+
+                    //De-activate Collision Effect Particle System after some seconds.
+                    StartCoroutine(DeactivateAfterSeconds(collisionEffectGameobject, 0.5f));
+
+                }
+            }
             float mySpeed = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
             float otherPlayerSpeed = collision.collider.gameObject.GetComponent<Rigidbody>().velocity.magnitude;
 
